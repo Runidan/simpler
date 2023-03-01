@@ -1,5 +1,5 @@
 require 'yaml'
-require 'singleton'
+require 'singleton' #библиотека для реализации патерна Singleton
 require 'sequel'
 require_relative 'router'
 require_relative 'controller'
@@ -7,7 +7,7 @@ require_relative 'controller'
 module Simpler
   class Application
 
-    include Singleton
+    include Singleton #при добавлении библиотеки метод new становиться приватным
 
     attr_reader :db
 
@@ -26,7 +26,7 @@ module Simpler
       @router.instance_eval(&block)
     end
 
-    def call(env)
+    def call(env) #метод необходим для поддержки rack интерфейса
       route = @router.route_for(env)
       controller = route.controller.new(env)
       action = route.action

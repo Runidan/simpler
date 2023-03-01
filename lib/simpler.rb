@@ -1,10 +1,11 @@
 require 'pathname'
 require_relative 'simpler/application'
 
+#весь код фр.ворка храним в модуле Simpler
 module Simpler
 
   class << self
-    def application
+    def application #возвращает объект приложения
       Application.instance
     end
 
