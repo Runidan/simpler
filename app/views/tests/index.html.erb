@@ -9,5 +9,11 @@
 <body>
   <h1>Simpler framework in action!</h1>
   <%= @time %>
+  <ul>
+    <% @tests.each do |test| %>
+      <li><%= test.title %>(<%= test.level %>)</li>
+    <% end %>
+    
+  </ul>
 </body>
 </html>
