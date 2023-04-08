@@ -1,4 +1,6 @@
+require 'yaml'
 require 'singleton'
+require 'sequel'
 require_relative 'router' #подключаем файл с классом Router
 require_relative 'controller' #подключим класс controller
 
@@ -7,11 +9,15 @@ module Simpler
 
     include Singleton
 
+    attr_reader :db
+
     def initialize
       @router = Router.new #создаем объект для хранения в нем всех маршрутов, переданных из config/routes.rb
+      @db = nil
     end
 
-    def bootstrap!
+    def bootstrap! #метод загрузки нашего приложения
+      setup_database #конфигурирование базы данных
       require_app #подключаем приложение
       require_routes  #подключаем маршруты
     end
@@ -40,5 +46,13 @@ module Simpler
     def require_routes
       require Simpler.root.join('config/routes') #подключаем маршруты. Метод root возращает путь до текущей дириктории приложения
     end
+    
+    def setup_database
+      database_config = YAML.load_file(Simpler.root.join('config/database.yml')) #считываем конфигурацию бд
+      database_config['database'] = Simpler.root.join(database_config['database']) #перезаписываем путь к бд относительно корня нашего приложения
+
+      @db = Sequel.connect(database_config)
+    end
   end
 end
+
